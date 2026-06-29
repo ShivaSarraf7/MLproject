@@ -30,8 +30,9 @@ class DataTransformation:
             )
             cat_pipeline=Pipeline(
                 steps=[("Imputer",SimpleImputer(strategy="most_frequent")),
-                       ("Scaler",StandardScaler())
-                       ("One_hot",OneHotEncoder())
+                       ("One_hot",OneHotEncoder()),
+                       ("Scaler",StandardScaler(with_mean=False)),
+                    
                        ]
             )
             logging.info("Numerical columns standard scaling Completed.")
@@ -60,10 +61,10 @@ class DataTransformation:
             target_column_name="math_score"
             numerical_columns=["writing_score","reading_score"]
 
-            input_feature_train_df=train_df.drop(columns=[target_column_name],axis=1)
+            input_feature_train_df=train_df.drop(columns=[target_column_name])
             target_features_train_df=train_df[target_column_name]
 
-            input_feature_test_df=test_df.drop(columns=[target_column_name],axis=1)
+            input_feature_test_df=test_df.drop(columns=[target_column_name])
             target_features_test_df=test_df[target_column_name]
 
             logging.info(
@@ -71,7 +72,7 @@ class DataTransformation:
             )
 
             input_feature_train_arr=preprcessing_obj.fit_transform(input_feature_train_df)
-            input_feature_test_arr=preprcessing_obj.fit_transform(input_feature_test_df)
+            input_feature_test_arr=preprcessing_obj.transform(input_feature_test_df)
 
             train_arr=np.c_[
                 input_feature_train_arr,np.array(target_features_train_df)
